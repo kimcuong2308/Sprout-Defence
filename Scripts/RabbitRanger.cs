@@ -113,10 +113,15 @@ public partial class RabbitRanger : Node2D
 	private void fireBulletV2(Vector2 target_position){	
 		Tween tween = GetTree().CreateTween();
 		ProjectileStone temp_bullet = bullet.Instantiate<ProjectileStone>();
-		AddChild(temp_bullet);
-		temp_bullet.Position = this.GlobalPosition;
+		GetNode("../../ProjectileLayers").AddChild(temp_bullet);
+		temp_bullet.GlobalPosition = this.GlobalPosition;
 
-		tween.TweenProperty(temp_bullet, "position", target_position, 0.01f);
+		tween.TweenProperty(
+			temp_bullet, 
+			"global_position", 
+			temp_bullet.GlobalPosition + target_position, 
+			0.05f);
+		tween.Play();
 		
 		// tween.TweenCallback(Callable.From(temp_bullet.QueueFree));
 
