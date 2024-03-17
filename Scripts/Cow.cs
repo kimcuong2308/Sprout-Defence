@@ -95,7 +95,7 @@ public partial class Cow : Node2D
 			);
 
 			Logger.Instance.Print($"Path: {id_path}");
-			Logger.Instance.Log($"Path: {id_path}");
+			// Logger.Instance.Log($"Path: {id_path}");
 
 			if (id_path.Count != 0) current_id_path = id_path;
 

@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://b4ngqxet7payw"]
+
+[ext_resource type="Script" path="res://Scripts/ProjectileStone.cs" id="1_obcja"]
+[ext_resource type="Texture2D" uid="uid://dqawp1kc0nv23" path="res://Assets/premium pack/Objects/Mushrooms, Flowers, Stones.png" id="1_ps6jh"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t8mje"]
+radius = 2.23607
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jeifm"]
+atlas = ExtResource("1_ps6jh")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2gkyn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jeifm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="ProjectileStone" type="CharacterBody2D"]
+script = ExtResource("1_obcja")
+
+[node name="CollideArea2" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_t8mje")
+
+[node name="Skin" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_2gkyn")
+offset = Vector2(0.655, -1.75)
+
+[node name="ProjectileArea" type="Area2D" parent="."]
+
+[node name="CollideArea" type="CollisionShape2D" parent="ProjectileArea"]
+shape = SubResource("CircleShape2D_t8mje")
+
+[connection signal="area_entered" from="ProjectileArea" to="." method="_on_projectile_area_area_entered"]

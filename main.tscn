@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cuf11pqsbtsum"]
+[gd_scene load_steps=32 format=3 uid="uid://cuf11pqsbtsum"]
 
 [ext_resource type="Texture2D" uid="uid://b23fh7yc5f8fy" path="res://Assets/premium pack/Tilesets/ground tiles/New tiles/Grass_Hill_Tiles_v3.png" id="2_2st8c"]
 [ext_resource type="Script" path="res://Scripts/RabbitRanger.cs" id="3_0jk3i"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c03c008nhykdm" path="res://Assets/premium pack/Tilesets/ground tiles/New tiles/Grass_tiles_v3.png" id="4_co2sx"]
 [ext_resource type="Texture2D" uid="uid://jpkowwk1bd1f" path="res://Assets/premium pack/Animals/Cow/Light cow animations.png" id="4_dlkgl"]
 [ext_resource type="Script" path="res://Scripts/Cow.cs" id="4_gd7k4"]
+[ext_resource type="Shader" path="res://Shader/AttackRange.gdshader" id="5_ve28s"]
 [ext_resource type="Texture2D" uid="uid://bibii8mvfpoy2" path="res://Assets/movable.png" id="6_ogfpy"]
 [ext_resource type="Texture2D" uid="uid://bb5wvinjoba4w" path="res://Assets/ui premium/UI Sprites/Other UI sprites/healthbar_under.png" id="7_gx44h"]
 [ext_resource type="Texture2D" uid="uid://chw44yunohxi8" path="res://Assets/ui premium/UI Sprites/Other UI sprites/healthbar_over_red.png" id="8_f24wu"]
@@ -1028,6 +1029,13 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_ny17u"]
 radius = 8.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ihcwh"]
+shader = ExtResource("5_ve28s")
+shader_parameter/red = 0.78
+shader_parameter/green = 0.47
+shader_parameter/blue = 0.45
+shader_parameter/alpha = 0.42
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_iqxbr"]
 atlas = ExtResource("4_dlkgl")
 region = Rect2(0, 0, 32, 32)
@@ -1058,8 +1066,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cuebf"]
-radius = 8.0
-height = 16.0
+radius = 7.0
+height = 14.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_g5c8c"]
 texture = ExtResource("6_ogfpy")
@@ -1099,10 +1107,13 @@ position = Vector2(56, 40)
 script = ExtResource("3_0jk3i")
 attack_range = NodePath("AttackArea")
 direction = "West"
+projectile_speed = 3000.0
+bullet_path = "res://Scene/ProjectileStone.tscn"
 
 [node name="Skin" type="AnimatedSprite2D" parent="Rabbits/RabbitRanger"]
 sprite_frames = SubResource("SpriteFrames_3h7d4")
 animation = &"Idle"
+autoplay = "Idle"
 
 [node name="BlockArea" type="Area2D" parent="Rabbits/RabbitRanger" groups=["Rabbits"]]
 
@@ -1112,6 +1123,7 @@ shape = SubResource("CircleShape2D_ny17u")
 [node name="AttackArea" type="Area2D" parent="Rabbits/RabbitRanger" groups=["AttackRange"]]
 
 [node name="AttackShape" type="CollisionPolygon2D" parent="Rabbits/RabbitRanger/AttackArea"]
+material = SubResource("ShaderMaterial_ihcwh")
 polygon = PackedVector2Array(-8, 24, 40, 24, 40, 8, 56, 8, 56, -8, 40, -8, 40, -24, -8, -24)
 
 [node name="AttackInterval" type="Timer" parent="Rabbits/RabbitRanger/AttackArea"]
@@ -1123,6 +1135,7 @@ position = Vector2(56, 24)
 [node name="Skin" type="AnimatedSprite2D" parent="Rabbits/RabbitDefender"]
 sprite_frames = SubResource("SpriteFrames_3h7d4")
 animation = &"Idle"
+autoplay = "Idle"
 
 [node name="BlockArea" type="Area2D" parent="Rabbits/RabbitDefender" groups=["Rabbits"]]
 
@@ -1146,6 +1159,7 @@ healthbar = NodePath("HealthBar")
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_5cpau")
 animation = &"idle"
+autoplay = "idle"
 
 [node name="BlockArea" type="Area2D" parent="Enemy wave/Wave 1/Cow" groups=["Enemy"]]
 
