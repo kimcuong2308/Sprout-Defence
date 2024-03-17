@@ -18,7 +18,7 @@ public partial class ProjectileStone : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		var collisionInfo = MoveAndCollide(velocity * speed * (float)delta);
+		//var collisionInfo = MoveAndCollide(velocity * speed * (float)delta);
 	}
 
 	public void FlyTo(Vector2 target_position) {
@@ -31,7 +31,7 @@ public partial class ProjectileStone : CharacterBody2D
 		// return false;
 	}
 
-	private void _on_projectile_area_area_entered(Area2D area) {
-		this.QueueFree();
-	}
+	//private void _on_projectile_area_area_entered(Area2D area) {
+		//this.QueueFree();
+	//}
 }

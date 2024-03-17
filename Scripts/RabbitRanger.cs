@@ -2,11 +2,12 @@ using Godot;
 using Godot.Collections;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class RabbitRanger : Node2D
 {
 	[ExportGroup("Attributes")]
-	[Export] public int attack_damage = 20;
+	[Export] public int attack_damage = 5;
 	[Export] public float attack_interval = 0.5f;
 	[Export] public Area2D attack_range;
 	private float attack_waittime = 0;
@@ -20,7 +21,7 @@ public partial class RabbitRanger : Node2D
 	private bool isAttacking = false;
 	private bool isReadyToAttack = true;
 	private List<Cow> enemy_list = new List<Cow>();
-	private List<Node> current_attacking_enemy = new List<Node>();
+	private List<Cow> current_attacking_enemy = new List<Cow>();
 
 	// private CustomSignalSingleton _customSignalSingleton;
 
@@ -72,8 +73,12 @@ public partial class RabbitRanger : Node2D
 
 			if (enemy is Cow cow)
 			{
-				cow.isAlive();
-				enemy_list.Add(cow);
+				if (!enemy_list.Contains(enemy)) {
+					cow.isAlive();
+					enemy_list.Add(cow);
+					current_attacking_enemy.Add(cow);
+				}
+				
 			}
 
 			Logger.Instance.Print("Enemy enter attack range");
@@ -92,6 +97,7 @@ public partial class RabbitRanger : Node2D
 			{
 				cow.isAlive();
 				enemy_list.Remove(cow);
+				current_attacking_enemy.Remove(cow);
 			}
 
 			Logger.Instance.Print("Enemy exit attack range");
@@ -99,32 +105,32 @@ public partial class RabbitRanger : Node2D
 		Logger.Instance.Print($"enemy list: {enemy_list.Count}");
 	}
 
-	private void fireBullet(Vector2 target_position){
-		ProjectileStone temp_bullet = bullet.Instantiate<ProjectileStone>();
-		
-		AddChild(temp_bullet);
-
-		temp_bullet.Visible = true;
-
-		temp_bullet.Position = this.GlobalPosition;
-		temp_bullet.FlyTo(target_position); 
-	}
-
-	private void fireBulletV2(Vector2 target_position){	
+	private void fireBulletV2(){	
 		Tween tween = GetTree().CreateTween();
-		ProjectileStone temp_bullet = bullet.Instantiate<ProjectileStone>();
+		var temp_bullet = bullet.Instantiate<Node2D>();
 		GetNode("../../ProjectileLayers").AddChild(temp_bullet);
 		temp_bullet.GlobalPosition = this.GlobalPosition;
+
+		var target = this.current_attacking_enemy[0];
 
 		tween.TweenProperty(
 			temp_bullet, 
 			"global_position", 
-			temp_bullet.GlobalPosition + target_position, 
-			0.05f);
+			target.GlobalPosition, 
+			// 1f);
+			attack_interval);
 		tween.Play();
 		
-		// tween.TweenCallback(Callable.From(temp_bullet.QueueFree));
+		var callback = new Callable(this, nameof(dealDamage));
 
+		// callback.Call(target);
+		tween.TweenCallback(Callable.From(temp_bullet.QueueFree));
+		tween.TweenCallback(callback);
+		tween.TweenCallback(Callable.From(tween.Kill));
+	}
+
+	private void dealDamage() {
+		current_attacking_enemy[0].BeAttackBy(attack_damage);
 	}
 
 
@@ -135,9 +141,9 @@ public partial class RabbitRanger : Node2D
 
 		if (this.enemy_list[0].isAlive())
 		{
-			Logger.Instance.Print($"Attack enemy");
-			fireBulletV2(this.enemy_list[0].GlobalPosition);
-			this.enemy_list[0].BeAttackBy(attack_damage);
+			Logger.Instance.Print($"Attack enemy at position {this.enemy_list[0].GlobalPosition}");
+			fireBulletV2();
+			// this.enemy_list[0].BeAttackBy(attack_damage);
 		}
 		else
 		{
