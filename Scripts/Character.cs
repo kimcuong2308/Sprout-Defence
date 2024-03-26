@@ -19,10 +19,10 @@ public partial class Character : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Logger.Instance.Print("Starting game!");
-		Logger.Instance.Log("Starting game.");
-		Logger.Instance.Log("First message.");
-		Logger.Instance.Log("Second message.");
+		Logger.Instance.Print("Starting game!!");
+		Logger.Instance.Log("Starting game!!");
+		Logger.Instance.Log("First message!!");
+		Logger.Instance.Log("Second message!!");
 
 		tile_map = GetNode<TileMap>("../Map");
 		GD.Print(tile_map);

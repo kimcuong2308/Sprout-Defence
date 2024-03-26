@@ -41,7 +41,7 @@ public partial class Cow : Node2D
 
 		healthbar.Value = this.health;
 
-		Logger.Instance.Print($"({move_ground_map}) is movable for ground unit");
+		Logger.Instance.Print($"({move_ground_map}) is movable for ground unit.");
 		astar_grid = new AStarGrid2D();
 		astar_grid.Region = tile_map.GetUsedRect();
 		astar_grid.CellSize = new Godot.Vector2(16, 16);
